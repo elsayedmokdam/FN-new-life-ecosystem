@@ -10,11 +10,11 @@ export async function getMachinesAction(params: ListParams & { status?: string }
   return $SERVICE_REPOSITORY.Machines.getMachines(params);
 }
 
-export async function createMachineAction(payload: { name: string; type?: string; description?: string; status?: string }): Promise<HttpResult<ApiResponse<Machine>>> {
+export async function createMachineAction(payload: { name: string; type?: string; egyptAndAhlyCommissionRateBps?: number; otherBanksCommissionRateBps?: number; description?: string; status?: string }): Promise<HttpResult<ApiResponse<Machine>>> {
   return $SERVICE_REPOSITORY.Machines.createMachine(payload);
 }
 
-export async function updateMachineAction(id: string, payload: { name?: string; type?: string; description?: string }): Promise<HttpResult<ApiResponse<Machine>>> {
+export async function updateMachineAction(id: string, payload: { name?: string; type?: string; egyptAndAhlyCommissionRateBps?: number; otherBanksCommissionRateBps?: number; description?: string }): Promise<HttpResult<ApiResponse<Machine>>> {
   if (!isObjectId(id)) return invalidIdResult();
   return $SERVICE_REPOSITORY.Machines.updateMachine(id, payload);
 }

@@ -25,7 +25,11 @@ export default function ClientPicker({ onChange }: Props) {
     let cancelled = false;
     const timer = setTimeout(async () => {
       setLoading(true);
-      const res = await getClientsAction({ search: query, limit: "8", sort: "fullName:asc" });
+      const res = await getClientsAction({
+        search: query,
+        limit: "8",
+        sort: "fullName:asc",
+      });
       if (!cancelled && res.ok) setResults(res.data.data.data);
       if (!cancelled) setLoading(false);
     }, 300);
@@ -42,7 +46,17 @@ export default function ClientPicker({ onChange }: Props) {
           <p className="font-semibold text-foreground">{selected.fullName}</p>
           <p className="num text-xs text-muted-foreground">{selected.phone}</p>
         </div>
-        <button type="button" aria-label={t("common.clear")} onClick={() => { setSelected(null); onChange?.(""); }} className="flex size-8 cursor-pointer items-center justify-center rounded-lg hover:bg-card"><FiX /></button>
+        <button
+          type="button"
+          aria-label={t("common.clear")}
+          onClick={() => {
+            setSelected(null);
+            onChange?.("");
+          }}
+          className="flex size-8 cursor-pointer items-center justify-center rounded-lg hover:bg-card"
+        >
+          <FiX />
+        </button>
       </div>
     );
   }
@@ -51,16 +65,38 @@ export default function ClientPicker({ onChange }: Props) {
     <div className="rounded-xl border border-input bg-card">
       <div className="relative border-b border-border">
         <FiSearch className="absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t("client.searchPlaceholder")} className="w-full bg-transparent py-3 pe-3 ps-9 text-sm focus:outline-none" />
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={t("client.searchPlaceholder")}
+          className="w-full bg-transparent py-3 pe-3 ps-9 text-sm focus:outline-none"
+        />
       </div>
       <ul className="max-h-52 overflow-y-auto">
-        {loading && <li className="px-4 py-3 text-sm text-muted-foreground">{t("common.loading")}</li>}
-        {!loading && results.length === 0 && <li className="px-4 py-3 text-sm text-muted-foreground">{t("client.noResults")}</li>}
+        {loading && (
+          <li className="px-4 py-3 text-sm text-muted-foreground">
+            {t("common.loading")}
+          </li>
+        )}
+        {!loading && results.length === 0 && (
+          <li className="px-4 py-3 text-sm text-muted-foreground">
+            {t("client.noResults")}
+          </li>
+        )}
         {results.map((c) => (
           <li key={c._id}>
-            <button type="button" onClick={() => { setSelected(c); onChange?.(c._id); }} className="flex w-full cursor-pointer items-center justify-between gap-3 px-4 py-2.5 text-start text-sm hover:bg-muted">
+            <button
+              type="button"
+              onClick={() => {
+                setSelected(c);
+                onChange?.(c._id);
+              }}
+              className="flex w-full cursor-pointer items-center justify-between gap-3 px-4 py-2.5 text-start text-sm hover:bg-muted"
+            >
               <span className="font-medium">{c.fullName}</span>
-              <span className="num text-xs text-muted-foreground">{c.phone}</span>
+              <span className="num text-xs text-muted-foreground">
+                {c.phone}
+              </span>
             </button>
           </li>
         ))}

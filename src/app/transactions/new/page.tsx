@@ -14,14 +14,11 @@ export default async function NewTransactionPage({ searchParams }: { searchParam
   const { cardId, type } = await searchParams;
   if (cardId && isObjectId(cardId)) redirect(`/cards/${cardId}/transactions/new${type ? `?type=${type}` : ""}`);
   const { t } = await getT();
-  const [machines, settings] = await Promise.all([
-    $SERVICE_REPOSITORY.Machines.getMachines({ status: "active", limit: "200" }),
-    $SERVICE_REPOSITORY.Settings.getCommissionSettings(),
-  ]);
+  const machines = await $SERVICE_REPOSITORY.Machines.getMachines({ status: "active", limit: "200" });
   return (
     <>
       <PageHeader icon={<FiRepeat />} title={t("tx.add")} subtitle={t("tx.addSubtitle")} />
-      {machines.ok && settings.ok ? <TransactionForm machines={machines.data.data.data} settings={settings.data.data} initialType={type === "deposit" ? "deposit" : "withdrawal"} /> : <ApiError error={!machines.ok ? machines.error : !settings.ok ? settings.error : undefined} />}
+      {machines.ok ? <TransactionForm machines={machines.data.data.data} initialType={type === "deposit" ? "deposit" : "withdrawal"} /> : <ApiError error={machines.error} />}
     </>
   );
 }

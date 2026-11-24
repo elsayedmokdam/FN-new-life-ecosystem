@@ -1,7 +1,7 @@
 import { changePasswordSchema, createEmployeeSchema, otpSchema, resetPasswordSchema, signinSchema } from "./auth.schemas";
 import { cardSchema } from "./card.schemas";
 import { editTransactionSchema, transactionSchema } from "./transaction.schemas";
-import { commissionSettingsSchema, machineSchema } from "./misc.schemas";
+import { machineSchema } from "./misc.schemas";
 
 /** Every form schema is a factory: it needs the translation function (and sometimes server settings). */
 export const $SCHEMAS_REPOSITORY = {
@@ -14,5 +14,4 @@ export const $SCHEMAS_REPOSITORY = {
   TRANSACTION_FORM: transactionSchema,
   EDIT_TRANSACTION_FORM: editTransactionSchema,
   MACHINE_FORM: machineSchema,
-  COMMISSION_SETTINGS_FORM: commissionSettingsSchema,
 } as const;

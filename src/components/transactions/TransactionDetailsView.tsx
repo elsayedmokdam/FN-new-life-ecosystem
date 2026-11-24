@@ -20,9 +20,20 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 }
 
 const FIELDS: Record<string, "money" | "rate" | "date" | "text"> = {
-  originalAmount: "money", netAmount: "money", customerCommission: "money", bankCommission: "money", intermediaryCommission: "money",
+  originalAmount: "money", netAmount: "money", customerCommission: "money", bankCommission: "money", intermediaryCommission: "money", totalCommission: "money",
   commissionRateBps: "rate", transactionDate: "date", notes: "text", machineId: "text", status: "text",
+  intermediaryCommissionRateBps: "rate",
 };
+
+const HIDDEN_HISTORY_FIELDS = new Set([
+  "commissionRateBps",
+  "commissionOverridden",
+  "machineCommissionType",
+  "bankCommission",
+  "intermediaryCommission",
+  "intermediaryCommissionRateBps",
+  "totalCommission",
+]);
 
 export default function TransactionDetailsView({ tx, isAdmin, viewerId }: { tx: TransactionDetails; isAdmin: boolean; viewerId: string }) {
   const { t, locale } = useT();
@@ -89,10 +100,7 @@ export default function TransactionDetailsView({ tx, isAdmin, viewerId }: { tx: 
           <dl>
             <Row label={t("tx.amount")}><Money value={tx.originalAmount} tone={tx.type === "withdrawal" ? "withdrawal" : "deposit"} /></Row>
             <Row label={t("tx.netAmount")}><Money value={tx.netAmount} /></Row>
-            {tx.type === "withdrawal" && <Row label={t("tx.rate")}><span className="num">{formatRate(tx.commissionRateBps)}%</span> {tx.commissionOverridden && <span className="text-xs text-muted-foreground">({t("tx.manual")})</span>}</Row>}
             <Row label={t("tx.customerCommission")}><Money value={tx.customerCommission} tone="commission" /></Row>
-            <Row label={t("tx.bankCommission")}><Money value={tx.bankCommission} /></Row>
-            <Row label={t("tx.intermediaryCommission")}><Money value={tx.intermediaryCommission} /></Row>
             <Row label={t("tx.balanceChange")}><Money value={tx.effects.balance} tone="auto" signed /></Row>
             <Row label={t("tx.debtChange")}><Money value={tx.effects.debt} tone={tx.effects.debt > 0 ? "debt" : "credit"} signed /></Row>
           </dl>
@@ -128,7 +136,7 @@ export default function TransactionDetailsView({ tx, isAdmin, viewerId }: { tx: 
               {h.reason && <p className="text-muted-foreground">{t("tx.reason")}: {h.reason}</p>}
               {h.oldValues && h.newValues && (
                 <ul className="mt-1 space-y-0.5 text-xs">
-                  {Object.keys(h.newValues).filter((k) => JSON.stringify((h.oldValues as Record<string, unknown>)[k]) !== JSON.stringify((h.newValues as Record<string, unknown>)[k])).map((k) => (
+                  {Object.keys(h.newValues).filter((k) => !HIDDEN_HISTORY_FIELDS.has(k) && JSON.stringify((h.oldValues as Record<string, unknown>)[k]) !== JSON.stringify((h.newValues as Record<string, unknown>)[k])).map((k) => (
                     <li key={k} className="flex flex-wrap items-center gap-2"><span className="text-muted-foreground">{t(`field.${k}`)}:</span><span className="line-through opacity-70">{showVal(k, (h.oldValues as Record<string, unknown>)[k])}</span>→<b>{showVal(k, (h.newValues as Record<string, unknown>)[k])}</b></li>
                   ))}
                 </ul>

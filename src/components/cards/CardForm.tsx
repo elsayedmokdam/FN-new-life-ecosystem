@@ -17,21 +17,19 @@ import {
 } from "@/services/actions/cards.action";
 import { Card } from "@/services/types/card_interface";
 import { notify } from "@/services/utils/helpers/alerts";
-import { parseMinor, formatRate } from "@/lib/money";
+import { parseMinor } from "@/lib/money";
 import { useT } from "@/i18n/LocaleProvider";
 
 interface Props {
   /** when present the form edits this card (client, number and opening balance are locked) */
   card?: Card;
   requiredFields: string[];
-  defaultRateBps: number;
   initialClientId?: string;
 }
 
 export default function CardForm({
   card,
   requiredFields,
-  defaultRateBps,
   initialClientId,
 }: Props) {
   const { t } = useT();
@@ -259,7 +257,6 @@ export default function CardForm({
     if (!res.ok) return notify.apiError(res.error);
     notify.success(t("card.created"));
     router.push(`/cards/${res.data.data._id}`);
-    router.refresh();
   }
 
   return (
@@ -301,13 +298,7 @@ export default function CardForm({
           layoutClassName="grid gap-5 md:grid-cols-2 [&>*:nth-child(n)]:min-w-0"
           buttonText={edit ? t("common.save") : t("card.create")}
           buttonClassName="bg-main-color text-white font-semibold px-6 py-6 rounded-xl w-full sm:w-auto flex items-center justify-center gap-2 transition"
-        >
-          {!edit && (
-            <p className="mt-4 rounded-xl bg-muted p-3 text-xs text-muted-foreground">
-              {t("card.commissionNote", { rate: formatRate(defaultRateBps) })}
-            </p>
-          )}
-        </AppForm>
+        ></AppForm>
       </div>
     </div>
   );

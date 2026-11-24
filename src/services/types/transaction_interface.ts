@@ -15,10 +15,13 @@ export interface Transaction {
   originalAmount: number;
   netAmount: number;
   commissionRateBps: number;
+  intermediaryCommissionRateBps?: number | null;
   commissionOverridden: boolean;
+  machineCommissionType?: "egypt_and_ahly" | "other_banks";
   customerCommission: number;
   bankCommission: number;
   intermediaryCommission: number;
+  totalCommission?: number;
   transactionDate: string;
   transactionDay: string;
   transactionTime: string;
@@ -27,7 +30,7 @@ export interface Transaction {
   hasReceipt: boolean;
   receiptMeta?: { originalName?: string; mimeType?: string; size?: number };
   rules?: { netAmountMode: string; bankCommissionPaidBy: string; intermediaryTreatment: string };
-  effects: { balance: number; debt: number };
+  effects: { balance: number; debt: number; manualBalance?: number; withdrawals?: number; deposits?: number; customerCommission?: number; bankCommission?: number; intermediaryCommission?: number };
   revision: number;
   createdAt: string;
   updatedAt: string;

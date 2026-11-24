@@ -9,6 +9,8 @@ export interface Client {
   address?: string;
   notes?: string;
   manualBalance?: number;
+  profit?: number;
+  actualProfit?: number;
   status: EntityStatus;
   createdAt: string;
   cardsCount?: number;
@@ -26,6 +28,8 @@ export interface ClientDetails extends Client {
     netDebt: number;
     totalDebt: number;
     totalCredit: number;
+    profit?: number;
+    actualProfit?: number;
   };
 }
 

@@ -14,7 +14,7 @@ import AppForm from "../shared/app-form/AppForm";
 import AppInput from "../shared/app-input/AppInput";
 import AppTextarea from "../shared/app-textarea/AppTextarea";
 import AppMoneyInput from "../shared/app-money-input/AppMoneyInput";
-import AppSelectOptions from "../shared/app-select-options/AppSelectOptions";
+import CardPicker from "../shared/card-picker/CardPicker";
 import {
   adjustClientDebtAction,
   updateClientAction,
@@ -37,6 +37,7 @@ export default function ClientDetailsView({
   const router = useRouter();
   const [edit, setEdit] = useState(false);
   const [editDebt, setEditDebt] = useState(false);
+  const [debtCard, setDebtCard] = useState<Card | null>(client.cards[0] ?? null);
 
   const schema = zod.object({
     fullName: nameRule(t),
@@ -53,23 +54,15 @@ export default function ClientDetailsView({
     manualBalance: zod
       .string()
       .optional()
-      .refine(
-        (v) => !v || parseMinor(v) !== null,
-        t("validation.amount"),
-      ),
+      .refine((v) => !v || parseMinor(v) !== null, t("validation.amount")),
   });
 
   const debtSchema = zod.object({
-    cardId: zod.string().trim().min(1, t("validation.required")),
     debt: zod
       .string()
       .trim()
       .refine((v) => parseMinor(v) !== null, t("validation.amount")),
-    reason: zod
-      .string()
-      .trim()
-      .min(3, t("validation.debtReason"))
-      .max(1000),
+    reason: zod.string().trim().max(1000),
   });
 
   const columns: Column<Card>[] = [
@@ -219,6 +212,18 @@ export default function ClientDetailsView({
         <StatCard title={t("client.manualBalance")}>
           <Money value={client.manualBalance ?? 0} signed />
         </StatCard>
+        <StatCard title={t("client.actualProfit")}>
+          <Money
+            value={
+              client.actualProfit ??
+              client.profit ??
+              client.totals.actualProfit ??
+              client.totals.profit ??
+              0
+            }
+            tone="commission"
+          />
+        </StatCard>
         <StatCard title={t("client.totalDebt")}>
           <Money
             value={client.totals.totalDebt}
@@ -258,15 +263,21 @@ export default function ClientDetailsView({
             { name: "address", type: "input", label: t("client.address") },
             { name: "notes", type: "textarea", label: t("client.notes") },
             ...(isAdmin
-              ? [{
-                  name: "manualBalance",
-                  type: "money" as const,
-                  label: t("client.manualBalance"),
-                  props: { allowNegative: true },
-                }]
+              ? [
+                  {
+                    name: "manualBalance",
+                    type: "money" as const,
+                    label: t("client.manualBalance"),
+                    props: { allowNegative: true },
+                  },
+                ]
               : []),
           ]}
-          components={{ input: AppInput, textarea: AppTextarea, money: AppMoneyInput }}
+          components={{
+            input: AppInput,
+            textarea: AppTextarea,
+            money: AppMoneyInput,
+          }}
           schema={schema}
           defaultValues={{
             fullName: client.fullName,
@@ -274,11 +285,15 @@ export default function ClientDetailsView({
             email: client.email ?? "",
             address: client.address ?? "",
             notes: client.notes ?? "",
-            ...(isAdmin ? { manualBalance: minorToInput(client.manualBalance) } : {}),
+            ...(isAdmin
+              ? { manualBalance: minorToInput(client.manualBalance) }
+              : {}),
           }}
           buttonText={t("common.save")}
           onSubmit={async (d: Record<string, string>) => {
-            const manualBalance = d.manualBalance ? parseMinor(d.manualBalance) : null;
+            const manualBalance = d.manualBalance
+              ? parseMinor(d.manualBalance)
+              : null;
             const res = await updateClientAction(client._id, {
               fullName: d.fullName,
               phone: d.phone,
@@ -304,18 +319,6 @@ export default function ClientDetailsView({
           <AppForm
             fields={[
               {
-                name: "cardId",
-                type: "select",
-                label: t("card.name"),
-                props: {
-                  placeholder: t("card.select"),
-                  values: client.cards.map((card) => ({
-                    value: card._id,
-                    label: `${card.cardName} (${card.maskedNumber})`,
-                  })),
-                },
-              },
-              {
                 name: "debt",
                 type: "money",
                 label: t("client.debtAdjustment"),
@@ -324,22 +327,20 @@ export default function ClientDetailsView({
               { name: "reason", type: "textarea", label: t("tx.reason") },
             ]}
             components={{
-              select: AppSelectOptions,
               money: AppMoneyInput,
               textarea: AppTextarea,
             }}
             schema={debtSchema}
             defaultValues={{
-              cardId: client.cards[0]?._id ?? "",
               debt: "",
               reason: "",
             }}
             buttonText={t("common.save")}
             onSubmit={async (d: Record<string, string>) => {
               const debt = parseMinor(d.debt);
-              if (debt === null) return;
+              if (debt === null || !debtCard) return;
               const res = await adjustClientDebtAction(client._id, {
-                cardId: d.cardId,
+                cardId: debtCard._id,
                 debt,
                 reason: d.reason.trim(),
               });
@@ -348,7 +349,16 @@ export default function ClientDetailsView({
               setEditDebt(false);
               router.refresh();
             }}
-          />
+          >
+            <label className="mb-4 block text-sm font-medium">
+              <span className="mb-2 block">{t("card.name")}</span>
+              <CardPicker
+                selected={debtCard}
+                cards={client.cards}
+                onSelect={setDebtCard}
+              />
+            </label>
+          </AppForm>
         </Modal>
       )}
     </div>

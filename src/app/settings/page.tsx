@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: "Settings" };
 
 export default async function SettingsPage() {
   const { t } = await getT();
-  const res = await $SERVICE_REPOSITORY.Settings.getCommissionSettings();
+  const res = await $SERVICE_REPOSITORY.Settings.getSystemSettings();
   return (
     <>
       <PageHeader icon={<FiSettings />} title={t("nav.settings")} subtitle={t("settings.subtitle")} />

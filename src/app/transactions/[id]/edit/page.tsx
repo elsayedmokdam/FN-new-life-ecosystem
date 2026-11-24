@@ -15,20 +15,19 @@ export default async function EditTransactionPage({ params }: { params: Promise<
   const { id } = await params;
   if (!isObjectId(id)) notFound();
   const { t } = await getT();
-  const [tx, machines, settings] = await Promise.all([
+  const [tx, machines] = await Promise.all([
     $SERVICE_REPOSITORY.Transactions.getTransaction(id),
     $SERVICE_REPOSITORY.Machines.getMachines({ limit: "200" }),
-    $SERVICE_REPOSITORY.Settings.getCommissionSettings(),
   ]);
   if (!tx.ok && tx.error.status === 404) notFound();
   if (tx.ok && tx.data.data.status !== "completed") redirect(`/transactions/${id}`);
   return (
     <>
       <PageHeader icon={<FiEdit2 />} title={t("tx.edit")} subtitle={tx.ok ? tx.data.data.transactionNumber : undefined} />
-      {tx.ok && machines.ok && settings.ok ? (
-        <TransactionForm transaction={tx.data.data} machines={machines.data.data.data} settings={settings.data.data} />
+      {tx.ok && machines.ok ? (
+        <TransactionForm transaction={tx.data.data} machines={machines.data.data.data} />
       ) : (
-        <ApiError error={firstError(tx, machines, settings)} />
+        <ApiError error={firstError(tx, machines)} />
       )}
     </>
   );

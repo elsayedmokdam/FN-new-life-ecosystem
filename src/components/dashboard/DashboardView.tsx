@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { FiAlertTriangle, FiArchive, FiClock, FiCreditCard, FiDollarSign, FiDownload, FiFileText, FiPercent, FiRepeat, FiTrendingDown, FiTrendingUp, FiUsers, FiUserCheck } from "react-icons/fi";
+import { FiArchive, FiClock, FiCreditCard, FiDollarSign, FiDownload, FiPercent, FiRepeat, FiTrendingDown, FiTrendingUp, FiUsers, FiUserCheck } from "react-icons/fi";
 import PeriodFilter, { PeriodValue } from "../shared/period-filter/PeriodFilter";
 import StatCard from "../shared/stat-card/StatCard";
 import Money from "../shared/money/Money";
@@ -59,30 +59,14 @@ export default function DashboardView({ summary: s0, charts: c0, recent }: Props
         </p>
       </div>
 
-      {!f.rulesConfirmed && (
-        <div className="flex items-start gap-3 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-200">
-          <FiAlertTriangle className="mt-0.5 size-5 shrink-0" />
-          <p>
-            {t("dash.rulesWarning")}{" "}
-            <Link href="/settings" className="font-semibold underline">{t("dash.rulesWarningLink")}</Link>
-          </p>
-        </div>
-      )}
-
       <div className={pending ? "pointer-events-none opacity-60 transition" : "transition"}>
         <h2 className="mb-3 text-sm font-bold text-muted-foreground">{t("dash.financial")}</h2>
         <div className={grid}>
           <StatCard title={t("dash.totalWithdrawals")} icon={<FiTrendingDown />} accent="bg-red-100 text-red-600 dark:bg-red-500/15 dark:text-red-300"><Money value={f.totalWithdrawals} tone="withdrawal" /></StatCard>
           <StatCard title={t("dash.totalDeposits")} icon={<FiTrendingUp />} accent="bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-300"><Money value={f.totalDeposits} tone="deposit" /></StatCard>
           <StatCard title={t("dash.netTransactions")} icon={<FiRepeat />} hint={t("dash.netHint")}><Money value={f.netTransactions} tone="auto" signed /></StatCard>
-          <StatCard title={t("dash.totalCardBalances")} icon={<FiCreditCard />}><Money value={f.totalCardBalances} /></StatCard>
           <StatCard title={t("dash.totalClientDebt")} icon={<FiDollarSign />} accent="bg-amber-100 text-amber-600 dark:bg-amber-500/15 dark:text-amber-300" hint={t("dash.snapshotHint")}><Money value={f.totalClientDebt} tone="debt" /></StatCard>
-          <StatCard title={t("dash.totalClientCredit")} icon={<FiDollarSign />} accent="bg-sky-100 text-sky-600 dark:bg-sky-500/15 dark:text-sky-300" hint={t("dash.snapshotHint")}><Money value={f.totalClientCredit} tone="credit" /></StatCard>
-          <StatCard title={t("dash.bankCommissions")} icon={<FiPercent />}><Money value={f.totalBankCommission} /></StatCard>
-          <StatCard title={t("dash.intermediaryCommissions")} icon={<FiPercent />}><Money value={f.totalIntermediaryCommission} /></StatCard>
           <StatCard title={t("dash.customerCommissions")} icon={<FiPercent />} accent="bg-violet-100 text-violet-600 dark:bg-violet-500/15 dark:text-violet-300"><Money value={f.totalCustomerCommission} tone="commission" /></StatCard>
-          <StatCard title={t("dash.netCommissionRevenue")} icon={<FiFileText />} hint={t("dash.provisional")} className="border-dashed"><Money value={f.netCommissionRevenue} /></StatCard>
-          <StatCard title={t("dash.actualProfit")} icon={<FiFileText />} hint={t("dash.profitUnknown")} className="border-dashed"><span className="text-base font-semibold text-muted-foreground">{t("dash.notAvailable")}</span></StatCard>
         </div>
 
         <h2 className="mb-3 mt-8 text-sm font-bold text-muted-foreground">{t("dash.operational")}</h2>

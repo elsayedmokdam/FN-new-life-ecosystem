@@ -10,16 +10,38 @@ import { getT } from "@/i18n/server";
 
 export const metadata: Metadata = { title: "Edit card" };
 
-export default async function EditCardPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function EditCardPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   if (!isObjectId(id)) notFound();
   const { t } = await getT();
-  const [card, settings] = await Promise.all([$SERVICE_REPOSITORY.Cards.getCard(id), $SERVICE_REPOSITORY.Settings.getCommissionSettings()]);
+  const [card, settings] = await Promise.all([
+    $SERVICE_REPOSITORY.Cards.getCard(id),
+    $SERVICE_REPOSITORY.Settings.getSystemSettings(),
+  ]);
   if (!card.ok && card.error.status === 404) notFound();
   return (
     <>
-      <PageHeader icon={<FiEdit2 />} title={t("card.edit")} subtitle={card.ok ? card.data.data.cardName : undefined} />
-      {card.ok && settings.ok ? <CardForm card={card.data.data} requiredFields={settings.data.data.cardRequiredFields} defaultRateBps={settings.data.data.defaultCommissionRateBps} /> : <ApiError error={!card.ok ? card.error : !settings.ok ? settings.error : undefined} />}
+      <PageHeader
+        icon={<FiEdit2 />}
+        title={t("card.edit")}
+        subtitle={card.ok ? card.data.data.cardName : undefined}
+      />
+      {card.ok && settings.ok ? (
+        <CardForm
+          card={card.data.data}
+          requiredFields={settings.data.data.cardRequiredFields}
+        />
+      ) : (
+        <ApiError
+          error={
+            !card.ok ? card.error : !settings.ok ? settings.error : undefined
+          }
+        />
+      )}
     </>
   );
 }

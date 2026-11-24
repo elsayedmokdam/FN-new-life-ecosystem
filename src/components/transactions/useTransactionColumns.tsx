@@ -7,7 +7,6 @@ import StatusBadge from "../shared/status-badge/StatusBadge";
 import { Transaction } from "@/services/types/transaction_interface";
 import { useT } from "@/i18n/LocaleProvider";
 import { formatDay } from "@/lib/format";
-import { formatRate } from "@/lib/money";
 
 interface Options {
   showCard?: boolean;
@@ -49,10 +48,7 @@ export function useTransactionColumns({ showCard = true, showClient = true, deta
   if (detailed) {
     cols.push(
       { key: "machine", header: t("tx.machine"), cell: (r) => r.machine?.name ?? "—", hideable: true, defaultHidden: true },
-      { key: "rate", header: t("tx.rate"), align: "end", cell: (r) => <span className="num">{r.type === "withdrawal" ? `${formatRate(r.commissionRateBps)}%` : "—"}</span>, hideable: true, defaultHidden: true },
       { key: "customerCommission", header: t("tx.customerCommission"), align: "end", cell: (r) => <Money value={r.customerCommission} tone="commission" currency={false} />, hideable: true, defaultHidden: true },
-      { key: "bankCommission", header: t("tx.bankCommission"), align: "end", cell: (r) => <Money value={r.bankCommission} currency={false} />, hideable: true, defaultHidden: true },
-      { key: "intermediaryCommission", header: t("tx.intermediaryCommission"), align: "end", cell: (r) => <Money value={r.intermediaryCommission} currency={false} />, hideable: true, defaultHidden: true },
       { key: "net", header: t("tx.netAmount"), align: "end", cell: (r) => <Money value={r.netAmount} currency={false} />, hideable: true, defaultHidden: true },
     );
   }

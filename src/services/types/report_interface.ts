@@ -13,9 +13,12 @@ export interface ReportRow {
   originalAmount: number;
   netAmount: number;
   commissionRateBps: number;
+  intermediaryCommissionRateBps?: number | null;
+  machineCommissionType?: "egypt_and_ahly" | "other_banks";
   customerCommission: number;
   bankCommission: number;
   intermediaryCommission: number;
+  totalCommission: number;
   createdBy: string;
   status: TransactionStatus;
   notes: string;
@@ -27,7 +30,6 @@ export interface Report {
   currency: string;
   timezone: string;
   generatedAt: string;
-  rulesConfirmed: boolean;
   period: { from: string; to: string } | null;
   summary: Partial<FinancialTotals>;
   transactions: ReportRow[];

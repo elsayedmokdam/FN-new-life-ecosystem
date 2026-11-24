@@ -9,23 +9,19 @@ export const transactionSchema = (t: TFn) =>
     transactionDate: dateRule(t),
     transactionTime: timeRule(t),
     machineId: zod.string().optional(),
-    bankCommission: moneyRule(t, { optional: true }),
-    intermediaryCommission: moneyRule(t, { optional: true }),
-    commissionRate: rateRule(t, true),
-    customerCommission: moneyRule(t, { optional: true }),
+    machineCommissionType: zod.enum(["egypt_and_ahly", "other_banks"]).optional(),
+    intermediaryCommissionRate: rateRule(t, true),
     notes: zod.string().max(2000).optional(),
   });
 
 export const editTransactionSchema = (t: TFn) =>
   zod.object({
-    reason: zod.string(t("validation.required")).trim().min(3, t("validation.reasonMin")).max(1000),
+    reason: zod.string().trim().min(3, t("validation.reasonMin")).max(1000),
     originalAmount: moneyRule(t, { positive: true }),
     transactionDate: dateRule(t),
     transactionTime: timeRule(t),
     machineId: zod.string().optional(),
-    bankCommission: moneyRule(t, { optional: true }),
-    intermediaryCommission: moneyRule(t, { optional: true }),
-    commissionRate: rateRule(t, true),
-    customerCommission: moneyRule(t, { optional: true }),
+    machineCommissionType: zod.enum(["egypt_and_ahly", "other_banks"]).optional(),
+    intermediaryCommissionRate: rateRule(t, true),
     notes: zod.string().max(2000).optional(),
   });

@@ -18,6 +18,7 @@ import { $SCHEMAS_REPOSITORY } from "@/schemas/schemas.repo";
 import { notify } from "@/services/utils/helpers/alerts";
 import { formatDay } from "@/lib/format";
 import { useT } from "@/i18n/LocaleProvider";
+import { formatRate, parseRateBps } from "@/lib/money";
 
 export default function MachinesView({ machines }: { machines: Machine[] }) {
   const { t, locale } = useT();
@@ -34,9 +35,11 @@ export default function MachinesView({ machines }: { machines: Machine[] }) {
   const columns: Column<Machine>[] = [
     { key: "name", header: t("machine.name"), cell: (m) => <span className="font-semibold">{m.name}</span> },
     { key: "type", header: t("machine.type"), cell: (m) => m.type ?? "—" },
+    { key: "egyptCommission", header: t("machine.egyptAndAhlyCommission"), align: "end", cell: (m) => <span className="num">{formatRate(m.egyptAndAhlyCommissionRateBps)}%</span>, hideable: true },
+    { key: "otherCommission", header: t("machine.otherBanksCommission"), align: "end", cell: (m) => <span className="num">{formatRate(m.otherBanksCommissionRateBps)}%</span>, hideable: true },
     { key: "description", header: t("machine.description"), cell: (m) => <span className="text-muted-foreground">{m.description ?? "—"}</span>, hideable: true },
-    { key: "count", header: t("machine.transactions"), align: "end", cell: (m) => <Link href={`/transactions?machineId=${m._id}`} className="num text-main-color hover:underline">{m.transactionCount ?? 0}</Link> },
-    { key: "volume", header: t("machine.volume"), align: "end", cell: (m) => <Money value={m.volume} />, hideable: true },
+    { key: "withdrawalCount", header: t("machine.withdrawalCount"), align: "end", cell: (m) => <Link href={`/transactions?machineId=${m._id}&type=withdrawal`} className="num text-main-color hover:underline">{m.withdrawalCount ?? 0}</Link> },
+    { key: "withdrawalVolume", header: t("machine.withdrawalVolume"), align: "end", cell: (m) => <Money value={m.withdrawalVolume} />, hideable: true },
     { key: "status", header: t("card.status"), cell: (m) => <StatusBadge status={m.status} /> },
     { key: "created", header: t("common.createdAt"), cell: (m) => formatDay(m.createdAt.slice(0, 10), locale), hideable: true, defaultHidden: true },
     {
@@ -61,14 +64,29 @@ export default function MachinesView({ machines }: { machines: Machine[] }) {
           fields={[
             { name: "name", type: "input", label: `${t("machine.name")} *` },
             { name: "type", type: "input", label: t("machine.type"), placeholder: "POS / ATM / Wallet" },
+            { name: "egyptAndAhlyCommissionRate", type: "input", label: t("machine.egyptAndAhlyCommission"), placeholder: "0.00", props: { dir: "ltr", inputMode: "decimal" } },
+            { name: "otherBanksCommissionRate", type: "input", label: t("machine.otherBanksCommission"), placeholder: "0.00", props: { dir: "ltr", inputMode: "decimal" } },
             { name: "description", type: "textarea", label: t("machine.description") },
           ]}
           components={{ input: AppInput, textarea: AppTextarea }}
           schema={$SCHEMAS_REPOSITORY.MACHINE_FORM(t)}
-          defaultValues={{ name: current?.name ?? "", type: current?.type ?? "", description: current?.description ?? "" }}
+          defaultValues={{
+            name: current?.name ?? "",
+            type: current?.type ?? "",
+            egyptAndAhlyCommissionRate: formatRate(current?.egyptAndAhlyCommissionRateBps),
+            otherBanksCommissionRate: formatRate(current?.otherBanksCommissionRateBps),
+            description: current?.description ?? "",
+          }}
           buttonText={t("common.save")}
-          onSubmit={async (d: { name: string; type?: string; description?: string }) => {
-            const res = current ? await updateMachineAction(current._id, d) : await createMachineAction(d);
+          onSubmit={async (d: { name: string; type?: string; egyptAndAhlyCommissionRate?: string; otherBanksCommissionRate?: string; description?: string }) => {
+            const payload = {
+              name: d.name,
+              type: d.type,
+              egyptAndAhlyCommissionRateBps: d.egyptAndAhlyCommissionRate?.trim() ? parseRateBps(d.egyptAndAhlyCommissionRate) ?? 0 : 0,
+              otherBanksCommissionRateBps: d.otherBanksCommissionRate?.trim() ? parseRateBps(d.otherBanksCommissionRate) ?? 0 : 0,
+              description: d.description,
+            };
+            const res = current ? await updateMachineAction(current._id, payload) : await createMachineAction(payload);
             if (!res.ok) return notify.apiError(res.error);
             notify.success(t("machine.updated"));
             setEditing(null);

@@ -6,6 +6,7 @@ export interface FinancialTotals {
   totalBankCommission: number;
   totalIntermediaryCommission: number;
   netCommissionRevenue: number;
+  actualBusinessProfit: number;
   transactionCount: number;
   withdrawalCount: number;
   depositCount: number;
@@ -16,11 +17,7 @@ export interface FinancialTotals {
 
 export interface DashboardSummary {
   period: { period: string; from: string; to: string; timezone: string };
-  financial: FinancialTotals & {
-    netCommissionRevenueProvisional: boolean;
-    actualBusinessProfit: number | null;
-    rulesConfirmed: boolean;
-  };
+  financial: FinancialTotals;
   operational: {
     totalCards: number;
     activeCards: number;
