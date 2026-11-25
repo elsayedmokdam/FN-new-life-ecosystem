@@ -12,8 +12,19 @@ export default async function ProfilePage() {
   const token = await getMyToken();
   return (
     <>
-      <PageHeader icon={<FiUser />} title={t("nav.profile")} subtitle={t("profile.subtitle")} />
-      <ProfileView user={{ name: (token?.name as string) ?? "", email: (token?.email as string) ?? "", role: token?.role ?? "employee" }} sessionExpires={token?.sessionExpires} />
+      <PageHeader
+        icon={<FiUser />}
+        title={t("nav.profile")}
+        subtitle={t("profile.subtitle")}
+      />
+      <ProfileView
+        user={{
+          name: (token?.name as string) ?? "",
+          email: (token?.email as string) ?? "",
+          role: token?.role ?? "employee",
+        }}
+        sessionExpires={token?.sessionExpires}
+      />
     </>
   );
 }

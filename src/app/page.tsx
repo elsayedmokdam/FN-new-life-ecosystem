@@ -19,9 +19,17 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <PageHeader icon={<FiHome />} title={t("nav.dashboard")} subtitle={t("dash.subtitle")} />
+      <PageHeader
+        icon={<FiHome />}
+        title={t("nav.dashboard")}
+        subtitle={t("dash.subtitle")}
+      />
       {summary.ok && charts.ok && recent.ok ? (
-        <DashboardView summary={summary.data.data} charts={charts.data.data} recent={recent.data.data} />
+        <DashboardView
+          summary={summary.data.data}
+          charts={charts.data.data}
+          recent={recent.data.data}
+        />
       ) : (
         <ApiError error={firstError(summary, charts, recent)} />
       )}

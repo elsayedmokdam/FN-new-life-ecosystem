@@ -240,8 +240,8 @@ export default function ForgotPasswordForm() {
             {resending
               ? t("common.loading")
               : cooldown.active
-              ? t("auth.resendIn", { s: cooldown.remaining })
-              : t("auth.resend")}
+                ? t("auth.resendIn", { s: cooldown.remaining })
+                : t("auth.resend")}
           </button>
         </div>
       </>

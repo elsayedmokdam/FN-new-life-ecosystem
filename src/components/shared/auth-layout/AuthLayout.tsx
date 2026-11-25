@@ -1,5 +1,5 @@
 import { FiCreditCard, FiLock, FiShield, FiBarChart2 } from "react-icons/fi";
-import logo from "../../../../public/images/logo.png"
+import logo from "../../../../public/images/logo.png";
 import Image from "next/image";
 
 interface AuthLayoutProps {
@@ -34,7 +34,9 @@ export default function AuthLayout({
                 src={logo}
                 alt="New Life Group"
               />
-              <h1 className="text-4xl text-center font-bold tracking-tight">{tagline}</h1>
+              <h1 className="text-4xl text-center font-bold tracking-tight">
+                {tagline}
+              </h1>
             </div>
             <div className="mt-10 flex items-center justify-center gap-8">
               {highlights.map((h, i) => {

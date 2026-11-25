@@ -13,11 +13,30 @@ interface Props {
 }
 
 /** Compact native select for table filters. */
-export default function FilterSelect({ value, onChange, options, all, className, ariaLabel }: Props) {
+export default function FilterSelect({
+  value,
+  onChange,
+  options,
+  all,
+  className,
+  ariaLabel,
+}: Props) {
   return (
-    <select aria-label={ariaLabel ?? all} value={value} onChange={(e) => onChange(e.target.value)} className={cn("h-10 rounded-xl border border-transparent bg-muted px-3 text-sm text-foreground focus:border-main-color focus:outline-none", className)}>
+    <select
+      aria-label={ariaLabel ?? all}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className={cn(
+        "h-10 rounded-xl border border-transparent bg-muted px-3 text-sm text-foreground focus:border-main-color focus:outline-none",
+        className,
+      )}
+    >
       <option value="">{all}</option>
-      {options.map((o) => (<option key={o.value} value={o.value}>{o.label}</option>))}
+      {options.map((o) => (
+        <option key={o.value} value={o.value}>
+          {o.label}
+        </option>
+      ))}
     </select>
   );
 }

@@ -25,12 +25,30 @@ interface Props {
 }
 
 /** Transactions table with search, filters, sorting and pagination (used by /transactions and the card details). */
-export default function TransactionsExplorer({ initial, cardId, clientId, machineId, showCard = true, showClient = true, storageKey = "transactions" }: Props) {
+export default function TransactionsExplorer({
+  initial,
+  cardId,
+  clientId,
+  machineId,
+  showCard = true,
+  showClient = true,
+  storageKey = "transactions",
+}: Props) {
   const { t } = useT();
   const router = useRouter();
   const [rows, setRows] = useState(initial.data);
   const [meta, setMeta] = useState<PaginationMeta | undefined>(initial.meta);
-  const [q, setQ] = useState({ search: "", type: "", status: "", period: "", from: "", to: "", sort: "transactionDate:desc", page: 1, limit: 10 });
+  const [q, setQ] = useState({
+    search: "",
+    type: "",
+    status: "",
+    period: "",
+    from: "",
+    to: "",
+    sort: "transactionDate:desc",
+    page: 1,
+    limit: 10,
+  });
   const [pending, startTransition] = useTransition();
   const first = useRef(true);
   const columns = useTransactionColumns({ showCard, showClient });
@@ -69,8 +87,13 @@ export default function TransactionsExplorer({ initial, cardId, clientId, machin
     load(q);
   }, [q, load]);
 
-  const set = (patch: Partial<typeof q>) => setQ((p) => ({ ...p, page: 1, ...patch }));
-  const onSearch = useCallback((s: string) => setQ((p) => (p.search === s ? p : { ...p, search: s, page: 1 })), []);
+  const set = (patch: Partial<typeof q>) =>
+    setQ((p) => ({ ...p, page: 1, ...patch }));
+  const onSearch = useCallback(
+    (s: string) =>
+      setQ((p) => (p.search === s ? p : { ...p, search: s, page: 1 })),
+    [],
+  );
 
   return (
     <>
@@ -85,20 +108,70 @@ export default function TransactionsExplorer({ initial, cardId, clientId, machin
         storageKey={storageKey}
         toolbar={
           <>
-            <SearchInput onSearch={onSearch} placeholder={t("tx.searchPlaceholder")} className="w-full sm:w-64" />
-            <FilterSelect value={q.type} onChange={(type) => set({ type })} all={t("tx.allTypes")} options={[{ value: "withdrawal", label: t("status.withdrawal") }, { value: "deposit", label: t("status.deposit") }]} />
-            <FilterSelect value={q.status} onChange={(status) => set({ status })} all={t("tx.allStatuses")} options={(["completed", "cancellation_pending", "reversed"] as const).map((s) => ({ value: s, label: t(`status.${s}`) }))} />
-            <FilterSelect value={q.period} onChange={(period) => set({ period })} all={t("period.all")} options={(["today", "yesterday", "this_week", "this_month", "last_month", "custom"] as const).map((p) => ({ value: p, label: t(`period.${p}`) }))} />
+            <SearchInput
+              onSearch={onSearch}
+              placeholder={t("tx.searchPlaceholder")}
+              className="w-full sm:w-64"
+            />
+            <FilterSelect
+              value={q.type}
+              onChange={(type) => set({ type })}
+              all={t("tx.allTypes")}
+              options={[
+                { value: "withdrawal", label: t("status.withdrawal") },
+                { value: "deposit", label: t("status.deposit") },
+              ]}
+            />
+            <FilterSelect
+              value={q.status}
+              onChange={(status) => set({ status })}
+              all={t("tx.allStatuses")}
+              options={(
+                ["completed", "cancellation_pending", "reversed"] as const
+              ).map((s) => ({ value: s, label: t(`status.${s}`) }))}
+            />
+            <FilterSelect
+              value={q.period}
+              onChange={(period) => set({ period })}
+              all={t("period.all")}
+              options={(
+                [
+                  "today",
+                  "yesterday",
+                  "this_week",
+                  "this_month",
+                  "last_month",
+                  "custom",
+                ] as const
+              ).map((p) => ({ value: p, label: t(`period.${p}`) }))}
+            />
             {q.period === "custom" && (
               <>
-                <input type="date" value={q.from} onChange={(e) => set({ from: e.target.value })} className="h-10 rounded-xl bg-muted px-3 text-sm" aria-label={t("period.from")} />
-                <input type="date" value={q.to} onChange={(e) => set({ to: e.target.value })} className="h-10 rounded-xl bg-muted px-3 text-sm" aria-label={t("period.to")} />
+                <input
+                  type="date"
+                  value={q.from}
+                  onChange={(e) => set({ from: e.target.value })}
+                  className="h-10 rounded-xl bg-muted px-3 text-sm"
+                  aria-label={t("period.from")}
+                />
+                <input
+                  type="date"
+                  value={q.to}
+                  onChange={(e) => set({ to: e.target.value })}
+                  className="h-10 rounded-xl bg-muted px-3 text-sm"
+                  aria-label={t("period.to")}
+                />
               </>
             )}
           </>
         }
       />
-      <TablePagination meta={meta} disabled={pending} onPage={(page) => setQ((p) => ({ ...p, page }))} onLimit={(limit) => set({ limit })} />
+      <TablePagination
+        meta={meta}
+        disabled={pending}
+        onPage={(page) => setQ((p) => ({ ...p, page }))}
+        onLimit={(limit) => set({ limit })}
+      />
     </>
   );
 }

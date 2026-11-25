@@ -13,8 +13,16 @@ export default async function MachinesPage() {
   const res = await $SERVICE_REPOSITORY.Machines.getMachines({ limit: "200" });
   return (
     <>
-      <PageHeader icon={<FiCpu />} title={t("nav.machines")} subtitle={t("machine.subtitle")} />
-      {res.ok ? <MachinesView machines={res.data.data.data} /> : <ApiError error={res.error} />}
+      <PageHeader
+        icon={<FiCpu />}
+        title={t("nav.machines")}
+        subtitle={t("machine.subtitle")}
+      />
+      {res.ok ? (
+        <MachinesView machines={res.data.data.data} />
+      ) : (
+        <ApiError error={res.error} />
+      )}
     </>
   );
 }

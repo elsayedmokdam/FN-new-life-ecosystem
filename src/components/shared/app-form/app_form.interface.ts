@@ -2,7 +2,15 @@ import React from "react";
 import { FieldValues } from "react-hook-form";
 import { z } from "zod";
 
-export type FieldType = "input" | "textarea" | "select" | "money" | "checkbox" | "date" | "client" | "tabs";
+export type FieldType =
+  | "input"
+  | "textarea"
+  | "select"
+  | "money"
+  | "checkbox"
+  | "date"
+  | "client"
+  | "tabs";
 
 export interface FormField {
   name: string;

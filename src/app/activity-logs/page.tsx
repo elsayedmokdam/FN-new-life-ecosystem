@@ -10,11 +10,22 @@ export const metadata: Metadata = { title: "Activity logs" };
 
 export default async function ActivityLogsPage() {
   const { t } = await getT();
-  const res = await $SERVICE_REPOSITORY.ActivityLogs.getActivityLogs({ page: "1", limit: "20" });
+  const res = await $SERVICE_REPOSITORY.ActivityLogs.getActivityLogs({
+    page: "1",
+    limit: "20",
+  });
   return (
     <>
-      <PageHeader icon={<FiActivity />} title={t("nav.activityLogs")} subtitle={t("activity.subtitle")} />
-      {res.ok ? <ActivityLogsView initial={res.data.data} /> : <ApiError error={res.error} />}
+      <PageHeader
+        icon={<FiActivity />}
+        title={t("nav.activityLogs")}
+        subtitle={t("activity.subtitle")}
+      />
+      {res.ok ? (
+        <ActivityLogsView initial={res.data.data} />
+      ) : (
+        <ApiError error={res.error} />
+      )}
     </>
   );
 }

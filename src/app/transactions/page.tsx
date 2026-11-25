@@ -11,23 +11,65 @@ import { getT } from "@/i18n/server";
 
 export const metadata: Metadata = { title: "Transactions" };
 
-export default async function TransactionsPage({ searchParams }: { searchParams: Promise<{ tab?: string; machineId?: string; cardId?: string; clientId?: string }> }) {
+export default async function TransactionsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    tab?: string;
+    machineId?: string;
+    cardId?: string;
+    clientId?: string;
+  }>;
+}) {
   const sp = await searchParams;
   const { t } = await getT();
   const token = await getMyToken();
   const isAdmin = token?.role === "admin";
   const pick = (v?: string) => (v && isObjectId(v) ? v : undefined);
-  const machineId = pick(sp.machineId), cardId = pick(sp.cardId), clientId = pick(sp.clientId);
+  const machineId = pick(sp.machineId),
+    cardId = pick(sp.cardId),
+    clientId = pick(sp.clientId);
 
   const [list, requests] = await Promise.all([
-    $SERVICE_REPOSITORY.Transactions.getTransactions({ page: "1", limit: "10", sort: "transactionDate:desc", machineId, cardId, clientId }),
-    isAdmin ? $SERVICE_REPOSITORY.Transactions.getCancellationRequests({ limit: "50" }) : Promise.resolve(null),
+    $SERVICE_REPOSITORY.Transactions.getTransactions({
+      page: "1",
+      limit: "10",
+      sort: "transactionDate:desc",
+      machineId,
+      cardId,
+      clientId,
+    }),
+    isAdmin
+      ? $SERVICE_REPOSITORY.Transactions.getCancellationRequests({
+          limit: "50",
+        })
+      : Promise.resolve(null),
   ]);
   return (
     <>
-      <PageHeader icon={<FiRepeat />} title={t("nav.transactions")} subtitle={t("tx.subtitle")} actions={<Link href="/transactions/new" className="flex items-center gap-2 rounded-xl bg-main-color px-4 py-2.5 text-sm font-semibold text-white"><FiPlus /> <span className="hidden sm:inline">{t("tx.add")}</span></Link>} />
+      <PageHeader
+        icon={<FiRepeat />}
+        title={t("nav.transactions")}
+        subtitle={t("tx.subtitle")}
+        actions={
+          <Link
+            href="/transactions/new"
+            className="flex items-center gap-2 rounded-xl bg-main-color px-4 py-2.5 text-sm font-semibold text-white"
+          >
+            <FiPlus /> <span className="hidden sm:inline">{t("tx.add")}</span>
+          </Link>
+        }
+      />
       {list.ok ? (
-        <TransactionsPageView initial={list.data.data} requests={requests?.ok ? requests.data.data.data : []} isAdmin={isAdmin} initialTab={sp.tab === "requests" ? "requests" : "all"} machineId={machineId} cardId={cardId} clientId={clientId} />
+        <TransactionsPageView
+          initial={list.data.data}
+          requests={requests?.ok ? requests.data.data.data : []}
+          isAdmin={isAdmin}
+          initialTab={sp.tab === "requests" ? "requests" : "all"}
+          machineId={machineId}
+          cardId={cardId}
+          clientId={clientId}
+        />
       ) : (
         <ApiError error={list.error} />
       )}

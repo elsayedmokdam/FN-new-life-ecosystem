@@ -14,12 +14,23 @@ export default async function ReportsPage() {
   const isAdmin = token?.role === "admin";
   const [machines, users] = await Promise.all([
     $SERVICE_REPOSITORY.Machines.getMachines({ limit: "200" }),
-    isAdmin ? $SERVICE_REPOSITORY.Users.getUsers({ limit: "100" }) : Promise.resolve(null),
+    isAdmin
+      ? $SERVICE_REPOSITORY.Users.getUsers({ limit: "100" })
+      : Promise.resolve(null),
   ]);
   return (
     <>
-      <PageHeader icon={<FiBarChart2 />} title={t("nav.reports")} subtitle={t("report.subtitle")} />
-      <ReportsView machines={machines.ok ? machines.data.data.data : []} employees={users?.ok ? users.data.data.data : []} self={{ id: token?.userId ?? "", name: (token?.name as string) ?? "" }} isAdmin={isAdmin} />
+      <PageHeader
+        icon={<FiBarChart2 />}
+        title={t("nav.reports")}
+        subtitle={t("report.subtitle")}
+      />
+      <ReportsView
+        machines={machines.ok ? machines.data.data.data : []}
+        employees={users?.ok ? users.data.data.data : []}
+        self={{ id: token?.userId ?? "", name: (token?.name as string) ?? "" }}
+        isAdmin={isAdmin}
+      />
     </>
   );
 }

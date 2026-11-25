@@ -14,7 +14,9 @@ export const metadata: Metadata = {
   description: "Cards & financial transactions management",
 };
 
-export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   const locale = await getLocale();
   let viewer: Viewer | null = null;
   let unread = 0;
@@ -29,25 +31,54 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       email: (token.email as string) ?? "",
       role: token.role ?? "employee",
     };
-    const res = await $SERVICE_REPOSITORY.Notifications.getNotifications({ page: "1", limit: "1" });
+    const res = await $SERVICE_REPOSITORY.Notifications.getNotifications({
+      page: "1",
+      limit: "1",
+    });
     if (res.ok) unread = res.data.data.meta.unreadCount ?? 0;
-    else if (res.error.status === 401 || res.error.status === 403) sessionExpired = true;
+    else if (res.error.status === 401 || res.error.status === 403)
+      sessionExpired = true;
   }
 
   const preloadedState = {
-    user: { profile: viewer ? { _id: viewer.id, name: viewer.name, email: viewer.email, role: viewer.role as "admin" | "employee", status: "active" as const } : null },
+    user: {
+      profile: viewer
+        ? {
+            _id: viewer.id,
+            name: viewer.name,
+            email: viewer.email,
+            role: viewer.role as "admin" | "employee",
+            status: "active" as const,
+          }
+        : null,
+    },
     ui: { privacy: false, unreadNotifications: unread },
   };
 
   return (
-    <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>
+    <html
+      lang={locale}
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      suppressHydrationWarning
+    >
       <body>
         <ThemeProvider>
-          <Providers preloadedState={preloadedState} sessionExpired={sessionExpired} locale={locale} dict={dictionaryFor(locale)}>
+          <Providers
+            preloadedState={preloadedState}
+            sessionExpired={sessionExpired}
+            locale={locale}
+            dict={dictionaryFor(locale)}
+          >
             <AppShell viewer={viewer}>{children}</AppShell>
             <Toaster
               position="top-center"
-              toastOptions={{ style: { background: "var(--popover)", color: "var(--popover-foreground)", border: "1px solid var(--border)" } }}
+              toastOptions={{
+                style: {
+                  background: "var(--popover)",
+                  color: "var(--popover-foreground)",
+                  border: "1px solid var(--border)",
+                },
+              }}
             />
           </Providers>
         </ThemeProvider>

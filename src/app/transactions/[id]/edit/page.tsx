@@ -11,7 +11,11 @@ import { getT } from "@/i18n/server";
 
 export const metadata: Metadata = { title: "Edit transaction" };
 
-export default async function EditTransactionPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function EditTransactionPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   if (!isObjectId(id)) notFound();
   const { t } = await getT();
@@ -20,12 +24,20 @@ export default async function EditTransactionPage({ params }: { params: Promise<
     $SERVICE_REPOSITORY.Machines.getMachines({ limit: "200" }),
   ]);
   if (!tx.ok && tx.error.status === 404) notFound();
-  if (tx.ok && tx.data.data.status !== "completed") redirect(`/transactions/${id}`);
+  if (tx.ok && tx.data.data.status !== "completed")
+    redirect(`/transactions/${id}`);
   return (
     <>
-      <PageHeader icon={<FiEdit2 />} title={t("tx.edit")} subtitle={tx.ok ? tx.data.data.transactionNumber : undefined} />
+      <PageHeader
+        icon={<FiEdit2 />}
+        title={t("tx.edit")}
+        subtitle={tx.ok ? tx.data.data.transactionNumber : undefined}
+      />
       {tx.ok && machines.ok ? (
-        <TransactionForm transaction={tx.data.data} machines={machines.data.data.data} />
+        <TransactionForm
+          transaction={tx.data.data}
+          machines={machines.data.data.data}
+        />
       ) : (
         <ApiError error={firstError(tx, machines)} />
       )}

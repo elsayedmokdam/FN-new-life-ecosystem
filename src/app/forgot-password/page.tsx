@@ -15,7 +15,10 @@ export default async function ForgotPasswordPage() {
       tagline={t("auth.tagline")}
       highlights={[t("auth.h1"), t("auth.h2"), t("auth.h3")]}
       footer={
-        <a href="/signin" className="font-semibold text-main-color hover:underline">
+        <a
+          href="/signin"
+          className="font-semibold text-main-color hover:underline"
+        >
           {t("auth.back")}
         </a>
       }

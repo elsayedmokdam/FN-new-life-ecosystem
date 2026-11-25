@@ -3,7 +3,21 @@ import { BASE_URL } from "@/services/config";
 import { apiLanguage } from "@/services/utils/helpers/apiLanguage";
 import { getAccessToken } from "@/services/utils/helpers/getMyToken";
 
-const KEYS = ["report", "id", "period", "from", "to", "date", "month", "type", "cardId", "clientId", "machineId", "userId", "lang"];
+const KEYS = [
+  "report",
+  "id",
+  "period",
+  "from",
+  "to",
+  "date",
+  "month",
+  "type",
+  "cardId",
+  "clientId",
+  "machineId",
+  "userId",
+  "lang",
+];
 
 /** Proxies PDF / Excel exports: adds the API token (kept server-side) and forwards the file. */
 export async function GET(req: NextRequest) {
@@ -18,15 +32,27 @@ export async function GET(req: NextRequest) {
     if (v) qs.set(k, v);
   }
 
-  const res = await fetch(`${BASE_URL}/reports/export/${format}?${qs}`, { headers: { Authorization: `Bearer ${token}`, "Accept-Language": await apiLanguage() }, cache: "no-store" });
+  const res = await fetch(`${BASE_URL}/reports/export/${format}?${qs}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Accept-Language": await apiLanguage(),
+    },
+    cache: "no-store",
+  });
   if (!res.ok) {
     const body = await res.json().catch(() => ({ message: "Export failed" }));
-    return NextResponse.json({ message: body.message ?? "Export failed", issues: body.issues }, { status: res.status });
+    return NextResponse.json(
+      { message: body.message ?? "Export failed", issues: body.issues },
+      { status: res.status },
+    );
   }
   return new NextResponse(res.body, {
     headers: {
-      "Content-Type": res.headers.get("content-type") ?? "application/octet-stream",
-      "Content-Disposition": res.headers.get("content-disposition") ?? `attachment; filename="report.${format === "excel" ? "xlsx" : "pdf"}"`,
+      "Content-Type":
+        res.headers.get("content-type") ?? "application/octet-stream",
+      "Content-Disposition":
+        res.headers.get("content-disposition") ??
+        `attachment; filename="report.${format === "excel" ? "xlsx" : "pdf"}"`,
       "Cache-Control": "no-store",
     },
   });

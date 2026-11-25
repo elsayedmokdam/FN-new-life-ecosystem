@@ -13,8 +13,16 @@ export default async function SettingsPage() {
   const res = await $SERVICE_REPOSITORY.Settings.getSystemSettings();
   return (
     <>
-      <PageHeader icon={<FiSettings />} title={t("nav.settings")} subtitle={t("settings.subtitle")} />
-      {res.ok ? <SettingsView settings={res.data.data} /> : <ApiError error={res.error} />}
+      <PageHeader
+        icon={<FiSettings />}
+        title={t("nav.settings")}
+        subtitle={t("settings.subtitle")}
+      />
+      {res.ok ? (
+        <SettingsView settings={res.data.data} />
+      ) : (
+        <ApiError error={res.error} />
+      )}
     </>
   );
 }

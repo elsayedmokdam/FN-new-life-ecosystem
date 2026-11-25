@@ -21,7 +21,10 @@ interface ThemeToggleProps {
 }
 
 /** Sun / moon button with a Light · Dark · System menu. */
-export default function ThemeToggle({ side = "bottom", className = "" }: ThemeToggleProps) {
+export default function ThemeToggle({
+  side = "bottom",
+  className = "",
+}: ThemeToggleProps) {
   const { theme, setTheme } = useTheme();
 
   return (
@@ -38,7 +41,11 @@ export default function ThemeToggle({ side = "bottom", className = "" }: ThemeTo
           <FiMoon className="hidden size-5 dark:block" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent side={side} align="end" className="w-40 rounded-xl p-1">
+      <DropdownMenuContent
+        side={side}
+        align="end"
+        className="w-40 rounded-xl p-1"
+      >
         {OPTIONS.map(({ value, label, icon: Icon }) => (
           <DropdownMenuItem
             key={value}

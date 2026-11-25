@@ -11,7 +11,11 @@ import { getMyToken } from "@/services/utils/helpers/getMyToken";
 
 export const metadata: Metadata = { title: "Client" };
 
-export default async function ClientPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function ClientPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   if (!isObjectId(id)) notFound();
   const { t } = await getT();
@@ -22,8 +26,19 @@ export default async function ClientPage({ params }: { params: Promise<{ id: str
   if (!res.ok && res.error.status === 404) notFound();
   return (
     <>
-      <PageHeader icon={<FiUsers />} title={res.ok ? res.data.data.fullName : t("nav.clients")} subtitle={t("client.details")} />
-      {res.ok ? <ClientDetailsView client={res.data.data} isAdmin={token?.role === "admin"} /> : <ApiError error={res.error} />}
+      <PageHeader
+        icon={<FiUsers />}
+        title={res.ok ? res.data.data.fullName : t("nav.clients")}
+        subtitle={t("client.details")}
+      />
+      {res.ok ? (
+        <ClientDetailsView
+          client={res.data.data}
+          isAdmin={token?.role === "admin"}
+        />
+      ) : (
+        <ApiError error={res.error} />
+      )}
     </>
   );
 }

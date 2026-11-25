@@ -10,11 +10,22 @@ export const metadata: Metadata = { title: "Notifications" };
 
 export default async function NotificationsPage() {
   const { t } = await getT();
-  const res = await $SERVICE_REPOSITORY.Notifications.getNotifications({ page: "1", limit: "15" });
+  const res = await $SERVICE_REPOSITORY.Notifications.getNotifications({
+    page: "1",
+    limit: "15",
+  });
   return (
     <>
-      <PageHeader icon={<FiBell />} title={t("nav.notifications")} subtitle={t("notif.subtitle")} />
-      {res.ok ? <NotificationsView initial={res.data.data} /> : <ApiError error={res.error} />}
+      <PageHeader
+        icon={<FiBell />}
+        title={t("nav.notifications")}
+        subtitle={t("notif.subtitle")}
+      />
+      {res.ok ? (
+        <NotificationsView initial={res.data.data} />
+      ) : (
+        <ApiError error={res.error} />
+      )}
     </>
   );
 }

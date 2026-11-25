@@ -61,7 +61,9 @@ export default function PaginationStatus({
           <p className="text-muted-foreground text-sm font-medium">
             You’ve reached the end
           </p>
-          <p className="text-muted-foreground/70 text-xs">No more {noun} to display</p>
+          <p className="text-muted-foreground/70 text-xs">
+            No more {noun} to display
+          </p>
         </div>
       )}
 
@@ -73,7 +75,9 @@ export default function PaginationStatus({
       {/* Pagination info */}
       {itemsCount > 0 && (
         <div className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 px-4 py-2 rounded-full border border-border">
-          <span className="font-medium text-foreground">Page {currentPageNum}</span>
+          <span className="font-medium text-foreground">
+            Page {currentPageNum}
+          </span>
           {totalPages ? (
             <>
               <span className="text-muted-foreground/70">/</span>

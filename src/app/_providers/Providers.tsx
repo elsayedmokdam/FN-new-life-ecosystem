@@ -19,7 +19,13 @@ interface ProvidersProps {
   dict: Dict;
 }
 
-export default function Providers({ children, preloadedState, sessionExpired, locale, dict }: ProvidersProps) {
+export default function Providers({
+  children,
+  preloadedState,
+  sessionExpired,
+  locale,
+  dict,
+}: ProvidersProps) {
   const [store] = useState<AppStore>(() => makeStore(preloadedState));
   const profile = preloadedState.user.profile;
   const unread = preloadedState.ui.unreadNotifications;
@@ -39,7 +45,10 @@ export default function Providers({ children, preloadedState, sessionExpired, lo
     }
     return store.subscribe(() => {
       try {
-        localStorage.setItem("privacy", store.getState().ui.privacy ? "1" : "0");
+        localStorage.setItem(
+          "privacy",
+          store.getState().ui.privacy ? "1" : "0",
+        );
       } catch {
         /* ignore */
       }

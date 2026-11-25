@@ -67,8 +67,9 @@ const AppForm = forwardRef<AppFormRef, AppFormProps>(
 
     const visibleFields = useMemo(() => {
       return (
-        fields?.filter((f) => !f.hidden && (!f.showWhen || f.showWhen(values))) ??
-        []
+        fields?.filter(
+          (f) => !f.hidden && (!f.showWhen || f.showWhen(values)),
+        ) ?? []
       );
     }, [fields, values]);
 
@@ -94,7 +95,10 @@ const AppForm = forwardRef<AppFormRef, AppFormProps>(
                 name={fieldItem.name as any}
                 control={control}
                 render={({ field, fieldState }) => (
-                  <div data-invalid={fieldState.invalid} className={fieldItem.wrapperClassName}>
+                  <div
+                    data-invalid={fieldState.invalid}
+                    className={fieldItem.wrapperClassName}
+                  >
                     {fieldItem.label && (
                       <FieldLabel>{fieldItem.label}</FieldLabel>
                     )}

@@ -5,7 +5,11 @@ import { getT } from "@/i18n/server";
 
 export const metadata: Metadata = { title: "Sign in" };
 
-export default async function SigninPage({ searchParams }: { searchParams: Promise<{ callbackUrl?: string }> }) {
+export default async function SigninPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ callbackUrl?: string }>;
+}) {
   const { callbackUrl } = await searchParams;
   const { t } = await getT();
   return (

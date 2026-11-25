@@ -11,16 +11,35 @@ import { getT } from "@/i18n/server";
 
 export const metadata: Metadata = { title: "Transaction" };
 
-export default async function TransactionPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function TransactionPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   if (!isObjectId(id)) notFound();
   const { t } = await getT();
-  const [tx, token] = await Promise.all([$SERVICE_REPOSITORY.Transactions.getTransaction(id), getMyToken()]);
+  const [tx, token] = await Promise.all([
+    $SERVICE_REPOSITORY.Transactions.getTransaction(id),
+    getMyToken(),
+  ]);
   if (!tx.ok && tx.error.status === 404) notFound();
   return (
     <>
-      <PageHeader icon={<FiRepeat />} title={tx.ok ? tx.data.data.transactionNumber : t("tx.details")} subtitle={t("tx.details")} />
-      {tx.ok ? <TransactionDetailsView tx={tx.data.data} isAdmin={token?.role === "admin"} viewerId={token?.userId ?? ""} /> : <ApiError error={tx.error} />}
+      <PageHeader
+        icon={<FiRepeat />}
+        title={tx.ok ? tx.data.data.transactionNumber : t("tx.details")}
+        subtitle={t("tx.details")}
+      />
+      {tx.ok ? (
+        <TransactionDetailsView
+          tx={tx.data.data}
+          isAdmin={token?.role === "admin"}
+          viewerId={token?.userId ?? ""}
+        />
+      ) : (
+        <ApiError error={tx.error} />
+      )}
     </>
   );
 }

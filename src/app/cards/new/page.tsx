@@ -8,14 +8,29 @@ import { getT } from "@/i18n/server";
 
 export const metadata: Metadata = { title: "Add card" };
 
-export default async function NewCardPage({ searchParams }: { searchParams: Promise<{ clientId?: string }> }) {
+export default async function NewCardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ clientId?: string }>;
+}) {
   const { clientId } = await searchParams;
   const { t } = await getT();
   const settings = await $SERVICE_REPOSITORY.Settings.getSystemSettings();
   return (
     <>
-      <PageHeader icon={<FiPlus />} title={t("card.add")} subtitle={t("card.addSubtitle")} />
-      {settings.ok ? <CardForm requiredFields={settings.data.data.cardRequiredFields} initialClientId={clientId} /> : <ApiError error={settings.error} />}
+      <PageHeader
+        icon={<FiPlus />}
+        title={t("card.add")}
+        subtitle={t("card.addSubtitle")}
+      />
+      {settings.ok ? (
+        <CardForm
+          requiredFields={settings.data.data.cardRequiredFields}
+          initialClientId={clientId}
+        />
+      ) : (
+        <ApiError error={settings.error} />
+      )}
     </>
   );
 }

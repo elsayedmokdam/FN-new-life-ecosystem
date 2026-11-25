@@ -10,11 +10,22 @@ export const metadata: Metadata = { title: "Employees" };
 
 export default async function EmployeesPage() {
   const { t } = await getT();
-  const res = await $SERVICE_REPOSITORY.Users.getUsers({ limit: "100", sort: "createdAt:desc" });
+  const res = await $SERVICE_REPOSITORY.Users.getUsers({
+    limit: "100",
+    sort: "createdAt:desc",
+  });
   return (
     <>
-      <PageHeader icon={<FiUserCheck />} title={t("nav.employees")} subtitle={t("emp.subtitle")} />
-      {res.ok ? <EmployeesView employees={res.data.data.data} /> : <ApiError error={res.error} />}
+      <PageHeader
+        icon={<FiUserCheck />}
+        title={t("nav.employees")}
+        subtitle={t("emp.subtitle")}
+      />
+      {res.ok ? (
+        <EmployeesView employees={res.data.data.data} />
+      ) : (
+        <ApiError error={res.error} />
+      )}
     </>
   );
 }

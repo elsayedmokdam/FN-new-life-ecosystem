@@ -10,7 +10,11 @@ import { useT } from "@/i18n/LocaleProvider";
  * The API session is absolute (30 minutes). When it ends (or the API rejects the token),
  * the user is signed out and sent to the sign-in page.
  */
-export default function SessionGuard({ sessionExpired = false }: { sessionExpired?: boolean }) {
+export default function SessionGuard({
+  sessionExpired = false,
+}: {
+  sessionExpired?: boolean;
+}) {
   const { data: session } = useSession();
   const router = useRouter();
   const { t } = useT();
@@ -30,7 +34,10 @@ export default function SessionGuard({ sessionExpired = false }: { sessionExpire
   useEffect(() => {
     if (!session?.sessionExpires) return;
     const ms = session.sessionExpires - Date.now();
-    const id = setTimeout(() => setTimedOut(true), Math.min(Math.max(ms, 0) + 500, 2 ** 31 - 1));
+    const id = setTimeout(
+      () => setTimedOut(true),
+      Math.min(Math.max(ms, 0) + 500, 2 ** 31 - 1),
+    );
     return () => clearTimeout(id);
   }, [session?.sessionExpires]);
 

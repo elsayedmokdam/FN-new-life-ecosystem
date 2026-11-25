@@ -10,11 +10,23 @@ export const metadata: Metadata = { title: "Clients" };
 
 export default async function ClientsPage() {
   const { t } = await getT();
-  const res = await $SERVICE_REPOSITORY.Clients.getClients({ page: "1", limit: "10", sort: "createdAt:desc" });
+  const res = await $SERVICE_REPOSITORY.Clients.getClients({
+    page: "1",
+    limit: "10",
+    sort: "createdAt:desc",
+  });
   return (
     <>
-      <PageHeader icon={<FiUsers />} title={t("nav.clients")} subtitle={t("client.subtitle")} />
-      {res.ok ? <ClientsView initial={res.data.data} /> : <ApiError error={res.error} />}
+      <PageHeader
+        icon={<FiUsers />}
+        title={t("nav.clients")}
+        subtitle={t("client.subtitle")}
+      />
+      {res.ok ? (
+        <ClientsView initial={res.data.data} />
+      ) : (
+        <ApiError error={res.error} />
+      )}
     </>
   );
 }

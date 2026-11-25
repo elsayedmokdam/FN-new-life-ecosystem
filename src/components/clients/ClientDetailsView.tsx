@@ -37,7 +37,9 @@ export default function ClientDetailsView({
   const router = useRouter();
   const [edit, setEdit] = useState(false);
   const [editDebt, setEditDebt] = useState(false);
-  const [debtCard, setDebtCard] = useState<Card | null>(client.cards[0] ?? null);
+  const [debtCard, setDebtCard] = useState<Card | null>(
+    client.cards[0] ?? null,
+  );
 
   const schema = zod.object({
     fullName: nameRule(t),

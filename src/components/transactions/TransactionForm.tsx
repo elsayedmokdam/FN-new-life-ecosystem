@@ -144,8 +144,7 @@ export default function TransactionForm({
           ? (machine?.otherBanksCommissionRateBps ?? 0)
           : 0;
     const bank = percentOf(amount, rate);
-    const intermediaryRateBps =
-      parseRateBps(v.intermediaryCommissionRate) ?? 0;
+    const intermediaryRateBps = parseRateBps(v.intermediaryCommissionRate) ?? 0;
     const preserveLegacyCommission =
       edit &&
       transaction!.intermediaryCommissionRateBps == null &&
@@ -366,18 +365,23 @@ export default function TransactionForm({
                       },
                     ]}
                   />
-                  {v.machineId && field.value && (() => {
-                    const selectedMachine = machines.find((machine) => machine._id === v.machineId);
-                    const rateBps =
-                      field.value === "egypt_and_ahly"
-                        ? selectedMachine?.egyptAndAhlyCommissionRateBps
-                        : selectedMachine?.otherBanksCommissionRateBps;
-                    return rateBps != null ? (
-                      <p className="mt-2 text-sm font-medium text-main-color">
-                        {t("tx.machineCommissionType")}: <span className="num">{formatRate(rateBps)}%</span>
-                      </p>
-                    ) : null;
-                  })()}
+                  {v.machineId &&
+                    field.value &&
+                    (() => {
+                      const selectedMachine = machines.find(
+                        (machine) => machine._id === v.machineId,
+                      );
+                      const rateBps =
+                        field.value === "egypt_and_ahly"
+                          ? selectedMachine?.egyptAndAhlyCommissionRateBps
+                          : selectedMachine?.otherBanksCommissionRateBps;
+                      return rateBps != null ? (
+                        <p className="mt-2 text-sm font-medium text-main-color">
+                          {t("tx.machineCommissionType")}:{" "}
+                          <span className="num">{formatRate(rateBps)}%</span>
+                        </p>
+                      ) : null;
+                    })()}
                 </div>
               )}
             />
