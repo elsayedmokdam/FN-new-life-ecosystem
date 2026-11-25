@@ -175,16 +175,27 @@ export default function SigninForm({ callbackUrl }: { callbackUrl?: string }) {
   }
 
   return (
-    <AppForm
-      key="credentials"
-      fields={fields}
-      components={{ input: AppInput }}
-      defaultValues={{ email: "", password: "" }}
-      onSubmit={onSubmit}
-      formClassName="space-y-4"
-      layoutClassName="space-y-4"
-      buttonText={t("auth.continue")}
-      schema={schema}
-    />
+    <>
+      <AppForm
+        key="credentials"
+        fields={fields}
+        components={{ input: AppInput }}
+        defaultValues={{ email: "", password: "" }}
+        onSubmit={onSubmit}
+        formClassName="space-y-4"
+        layoutClassName="space-y-4"
+        buttonText={t("auth.continue")}
+        schema={schema}
+      />
+      <div className="mt-4 text-center">
+        <button
+          type="button"
+          onClick={() => router.push("/forgot-password")}
+          className="cursor-pointer text-sm font-semibold text-main-color hover:underline"
+        >
+          {t("auth.forgotPassword")}
+        </button>
+      </div>
+    </>
   );
 }

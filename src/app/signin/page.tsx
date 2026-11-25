@@ -14,7 +14,6 @@ export default async function SigninPage({ searchParams }: { searchParams: Promi
       title={t("auth.title")}
       subtitle={t("auth.subtitle")}
       tagline={t("auth.tagline")}
-      description={t("auth.description")}
       highlights={[t("auth.h1"), t("auth.h2"), t("auth.h3")]}
       footer={t("auth.noRegistration")}
     >

@@ -109,7 +109,7 @@ export default function AppShell({ viewer, children }: { viewer: Viewer | null; 
       <aside className="hidden w-64 shrink-0 flex-col gap-2 border-e border-sidebar-border bg-sidebar p-4 lg:flex">
         <Logo />
         <div className="mt-4 flex min-h-0 flex-1 flex-col">{nav}</div>
-        <p className="px-2 text-xs text-muted-foreground">{viewer.name}</p>
+        {/* <p className="px-2 text-xs text-muted-foreground">{viewer.name}</p> */}
       </aside>
 
       {/* mobile drawer */}

@@ -37,3 +37,29 @@ export interface ChangePasswordPayload {
   newPassword: string;
   confirmPassword: string;
 }
+
+export interface ForgotPasswordPayload {
+  email: string;
+}
+
+export interface PasswordResetChallenge {
+  challengeId: string;
+}
+
+export interface VerifyPasswordResetOtpPayload {
+  challengeId: string;
+  otp: string;
+}
+
+export interface PasswordResetVerification {
+  challengeId: string;
+  resetToken: string;
+  expiresInSeconds: number;
+}
+
+export interface ResetPasswordPayload {
+  challengeId: string;
+  resetToken: string;
+  newPassword: string;
+  confirmPassword: string;
+}

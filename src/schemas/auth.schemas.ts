@@ -28,3 +28,20 @@ export const resetPasswordSchema = (t: TFn) =>
   zod
     .object({ newPassword: passwordRule(t), confirmPassword: zod.string(t("validation.required")) })
     .refine((d) => d.newPassword === d.confirmPassword, { path: ["confirmPassword"], message: t("validation.passwordMatch") });
+
+export const forgotPasswordSchema = (t: TFn) =>
+  zod.object({ email: emailRule(t) });
+
+export const passwordResetOtpSchema = (t: TFn) =>
+  zod.object({ otp: otpRule(t) });
+
+export const passwordResetSchema = (t: TFn) =>
+  zod
+    .object({
+      newPassword: passwordRule(t),
+      confirmPassword: zod.string(t("validation.required")),
+    })
+    .refine((d) => d.newPassword === d.confirmPassword, {
+      path: ["confirmPassword"],
+      message: t("validation.passwordMatch"),
+    });

@@ -15,7 +15,7 @@ npm run typecheck && npm run check:i18n
 ```
 
 ## What is inside
-* **Sign-in** with e-mail + password, then the e-mailed OTP (resend with cool-down). 30-minute absolute session; expiry signs the user out.
+* **Sign-in** with e-mail + password, then the e-mailed OTP (resend with cool-down). **Forgot password** uses e-mail, reset OTP, OTP verification, and a reset token before setting a new password. The API's `/auth/forgot-password` response must include `data.challengeId` for all email addresses (using an opaque challenge for unknown accounts) so the client can continue without exposing account existence. 30-minute absolute session; expiry signs the user out.
 * **Dashboard** with period filters (today … custom), all financial + operational KPIs, 6 charts from real data, recent transactions, **privacy mode** (eye icon – hides every amount and blurs charts; visual only).
 * **Cards** (search, filters, sort, pagination, column visibility, responsive), add/edit card (existing or new client), **card details** (financial overview, ledger check, history), status changes.
 * **Transactions**: list, details (financials, receipt, cancellation, audit history), add (from a card or from the menu) with a live *estimate* panel (the API is the authority), edit with mandatory reason, cancellation request → admin approve/reject.

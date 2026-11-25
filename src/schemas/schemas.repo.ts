@@ -1,4 +1,4 @@
-import { changePasswordSchema, createEmployeeSchema, otpSchema, resetPasswordSchema, signinSchema } from "./auth.schemas";
+import { changePasswordSchema, createEmployeeSchema, forgotPasswordSchema, otpSchema, passwordResetOtpSchema, passwordResetSchema, resetPasswordSchema, signinSchema } from "./auth.schemas";
 import { cardSchema } from "./card.schemas";
 import { editTransactionSchema, transactionSchema } from "./transaction.schemas";
 import { machineSchema } from "./misc.schemas";
@@ -10,6 +10,9 @@ export const $SCHEMAS_REPOSITORY = {
   CHANGE_PASSWORD_FORM: changePasswordSchema,
   CREATE_EMPLOYEE_FORM: createEmployeeSchema,
   RESET_PASSWORD_FORM: resetPasswordSchema,
+  FORGOT_PASSWORD_FORM: forgotPasswordSchema,
+  PASSWORD_RESET_OTP_FORM: passwordResetOtpSchema,
+  PASSWORD_RESET_FORM: passwordResetSchema,
   CARD_FORM: cardSchema,
   TRANSACTION_FORM: transactionSchema,
   EDIT_TRANSACTION_FORM: editTransactionSchema,
